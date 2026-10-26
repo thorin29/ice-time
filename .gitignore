@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+# Local runs: your links and cache. Never commit these.
+data/
+sources.json
+cache.json
