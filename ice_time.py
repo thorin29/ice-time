@@ -29,7 +29,7 @@ import urllib.parse
 import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 
 DATA_DIR = os.environ.get("DATA_DIR", "/data")
 PORT = int(os.environ.get("PORT", "8080"))
@@ -683,7 +683,32 @@ class Handler(BaseHTTPRequestHandler):
         return self._send(404, page("Not found", "<h1>Not found</h1>"))
 
 
+def drop_privileges() -> None:
+    """Started as root (the image's default), take ownership of the data folder
+    and switch to PUID/PGID — 99:100 by default, the nobody:users that owns
+    Unraid's appdata — so the container can write its links with no extra
+    settings. Started as any other user (e.g. `--user`), this does nothing.
+    PUID=0 keeps running as root."""
+    if not hasattr(os, "getuid") or os.getuid() != 0:
+        return
+    uid = int(os.environ.get("PUID", "99"))
+    gid = int(os.environ.get("PGID", "100"))
+    if uid == 0:
+        return
+    os.makedirs(DATA_DIR, exist_ok=True)
+    for root, _dirs, files in os.walk(DATA_DIR):
+        for path in [root] + [os.path.join(root, f) for f in files]:
+            try:
+                os.chown(path, uid, gid)
+            except OSError as e:
+                print(f"[ice-time] couldn't take ownership of {path}: {e}", file=sys.stderr, flush=True)
+    os.setgroups([])
+    os.setgid(gid)
+    os.setuid(uid)
+
+
 def main() -> None:
+    drop_privileges()
     os.makedirs(DATA_DIR, exist_ok=True)
     threading.Thread(target=poll_forever, daemon=True).start()
     srv = ThreadingHTTPServer(("0.0.0.0", PORT), Handler)

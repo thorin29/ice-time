@@ -1,12 +1,13 @@
 # Roadmap
 
-## Now (0.1.0)
+## Now (0.1.1)
 
 - Paste Finnly registration links on the settings page; preview, label, pause, remove.
 - Reads every link every 30 minutes; keeps the last good read.
 - `GET /api/sessions?days=7` — sessions grouped by section, skater and goalie
   counts combined per time slot, link health and warnings.
 - Season-turnover warning when an old season's link runs dry.
+- Works on Unraid with no Extra Parameters: takes ownership of `/data`, runs as `PUID:PGID` (99:100).
 
 ## Next
 

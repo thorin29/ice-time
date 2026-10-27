@@ -49,6 +49,10 @@ Then open `http://<server>:8080/` and add your links (below).
 | Variable `FEED_TOKEN` | A long random string (Kairos uses the same one) |
 | Variable `SETTINGS_PASSWORD` | Optional — password for the settings page |
 
+No Extra Parameters are needed. The container takes ownership of its appdata
+folder and runs as `99:100` (Unraid's `nobody:users`). If you added
+`--user 99:100` for 0.1.0, it still works; you can remove it.
+
 The image is built by GitHub Actions on every push to `main`
 (`.github/workflows/build.yml`) and published to GitHub Container Registry
 under your repo's name. If the package is private, make it public in the
@@ -64,6 +68,7 @@ package settings or `docker login ghcr.io` on the server.
 | `POLL_MINUTES` | `30` | How often every link is re-read. Minimum 10. |
 | `PORT` | `8080` | Port inside the container. |
 | `DATA_DIR` | `/data` | Where links and the cache are kept. |
+| `PUID` / `PGID` | `99` / `100` | The user and group it runs as after taking ownership of `DATA_DIR`. Match your host's owner of the data folder. Ignored when started with `--user`. |
 
 ---
 

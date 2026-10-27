@@ -128,5 +128,15 @@ class Feed(unittest.TestCase):
         self.assertIsNone(rows[0]["skaters"])
 
 
+class Privileges(unittest.TestCase):
+    def test_not_root_does_nothing(self):
+        # Tests don't run as root in CI; started as any user it must not try
+        # to change owner or user.
+        if os.getuid() == 0:
+            self.skipTest("running as root")
+        ice.drop_privileges()
+        self.assertNotEqual(os.getuid(), 0)
+
+
 if __name__ == "__main__":
     unittest.main()

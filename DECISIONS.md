@@ -62,3 +62,14 @@ turn them on if the port is reachable from elsewhere.
 
 **No real data in the repo.** Tests use a made-up "Sample Arena" fixture.
 Real links live only in `/data`, which is git-ignored for local runs.
+
+## 0.1.1
+
+**Writable data folder with no extra settings.** 0.1.0 ran as a fixed user
+(10001), which can't write an Unraid appdata folder owned by `nobody:users`
+(99:100) — it needed `--user 99:100`. Now the service starts as root only to
+take ownership of `DATA_DIR`, then permanently drops to `PUID:PGID` (default
+99:100) before reading any page or opening the port to requests. Done in Python
+(`drop_privileges`) rather than an entrypoint script, so the image stays one
+file. Started with `--user`, it never runs as root at all.
+

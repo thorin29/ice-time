@@ -5,10 +5,12 @@ WORKDIR /app
 COPY ice_time.py .
 
 # Your links and the cached schedule live on a mounted volume, never in the image.
-ENV DATA_DIR=/data PORT=8080 PYTHONUNBUFFERED=1
-RUN useradd --system --uid 10001 icetime && mkdir -p /data && chown icetime /data
+# The service starts as root only long enough to take ownership of /data, then
+# runs as PUID:PGID (99:100 = Unraid's nobody:users). Change them to match your
+# host, or pass --user and it never runs as root at all.
+ENV DATA_DIR=/data PORT=8080 PUID=99 PGID=100 PYTHONUNBUFFERED=1
+RUN mkdir -p /data
 VOLUME ["/data"]
-USER icetime
 
 EXPOSE 8080
 HEALTHCHECK --interval=60s --timeout=5s --start-period=10s \
