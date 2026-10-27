@@ -1,6 +1,6 @@
 # Roadmap
 
-## Now (0.1.1)
+## Now (0.1.2)
 
 - Paste Finnly registration links on the settings page; preview, label, pause, remove.
 - Reads every link every 30 minutes; keeps the last good read.

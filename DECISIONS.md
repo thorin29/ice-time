@@ -73,3 +73,10 @@ take ownership of `DATA_DIR`, then permanently drops to `PUID:PGID` (default
 (`drop_privileges`) rather than an entrypoint script, so the image stays one
 file. Started with `--user`, it never runs as root at all.
 
+## 0.1.2
+
+**Icon reads as a rink.** The rink fills the tile edge to edge, with
+board-shaped corners (about a third of its height, like a real rink, rather
+than a pill), goal lines, creases and nets — so it's recognisable at the small
+size Unraid shows it.
+
